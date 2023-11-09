@@ -17,6 +17,7 @@ public class User : Entity
     #endregion
 
     public virtual ICollection<UserOperationClaim> UserOperationClaims { get; set; }
+    public virtual Customer Customer { get; set; }
 
     public User()
     {
