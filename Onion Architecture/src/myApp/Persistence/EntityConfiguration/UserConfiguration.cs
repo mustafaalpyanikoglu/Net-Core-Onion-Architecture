@@ -1,6 +1,7 @@
 ﻿using Domain.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Text;
 
 namespace Persistence.EntityConfiguration;
 
@@ -24,5 +25,61 @@ public partial class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasMany(u => u.UserOperationClaims).WithOne(u => u.User);
 
         #endregion
+
+        //User[] userSeeds =
+        //{
+        //    new User
+        //    {
+        //        Id = 1,
+        //        FirstName = "John",
+        //        LastName = "Doe",
+        //        PhoneNumber = "555-123-4567",
+        //        Address = "123 Main St",
+        //        Email = "john@example.com",
+        //        PasswordHash = Encoding.ASCII.GetBytes("password_hash_1"),
+        //        PasswordSalt = Encoding.ASCII.GetBytes("password_salt_1"),
+        //        RegistrationDate = DateTime.Now,
+        //        UserStatus = true
+        //    },
+        //    new User
+        //    {
+        //        Id = 2,
+        //        FirstName = "Jane",
+        //        LastName = "Smith",
+        //        PhoneNumber = "555-987-6543",
+        //        Address = "456 Elm St",
+        //        Email = "jane@example.com",
+        //        PasswordHash = Encoding.ASCII.GetBytes("password_hash_2"),
+        //        PasswordSalt = Encoding.ASCII.GetBytes("password_salt_2"),
+        //        RegistrationDate = DateTime.Now,
+        //        UserStatus = true
+        //    },
+        //    new User
+        //    {
+        //        Id = 3,
+        //        FirstName = "Alice",
+        //        LastName = "Johnson",
+        //        PhoneNumber = "555-555-5555",
+        //        Address = "789 Oak St",
+        //        Email = "alice@example.com",
+        //        PasswordHash = Encoding.ASCII.GetBytes("password_hash_3"),
+        //        PasswordSalt = Encoding.ASCII.GetBytes("password_salt_3"),
+        //        RegistrationDate = DateTime.Now,
+        //        UserStatus = true
+        //    },
+        //    new User
+        //    {
+        //        Id = 4,
+        //        FirstName = "Bob",
+        //        LastName = "Brown",
+        //        PhoneNumber = "555-111-2222",
+        //        Address = "101 Pine St",
+        //        Email = "bob@example.com",
+        //        PasswordHash = Encoding.ASCII.GetBytes("password_hash_4"),
+        //        PasswordSalt = Encoding.ASCII.GetBytes("password_salt_4"),
+        //        RegistrationDate = DateTime.Now,
+        //        UserStatus = true
+        //    }
+        //};
     }
 }
