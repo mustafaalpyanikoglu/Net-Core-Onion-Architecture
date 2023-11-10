@@ -12,8 +12,8 @@ using Persistence.Contexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BaseDbContext))]
-    [Migration("20231109222732__migration1")]
-    partial class _migration1
+    [Migration("20231110000616__Migration1")]
+    partial class _Migration1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -79,6 +79,33 @@ namespace Persistence.Migrations
                     b.ToTable("CustomerWarehouseCosts", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Concrete.EmailAuthenticator", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ActivationKey")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ActivationKey");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsVerified");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EmailAuthenticators", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Concrete.OperationClaim", b =>
                 {
                     b.Property<int>("Id")
@@ -125,6 +152,88 @@ namespace Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Concrete.OtpAuthenticator", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsVerified");
+
+                    b.Property<byte[]>("SecretKey")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("SecretKey");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("OtpAuthenticators", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Concrete.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("Created");
+
+                    b.Property<string>("CreatedByIp")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreatedByIp");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("Expires");
+
+                    b.Property<string>("ReasonRevoked")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ReasonRevoked");
+
+                    b.Property<string>("ReplacedByToken")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ReplacedByToken");
+
+                    b.Property<DateTime?>("Revoked")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("Revoked");
+
+                    b.Property<string>("RevokedByIp")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("RevokedByIp");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Token");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Concrete.User", b =>
                 {
                     b.Property<int>("Id")
@@ -140,6 +249,9 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("Address");
 
+                    b.Property<int>("AuthenticatorType")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -152,6 +264,10 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("FirstName");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ImageUrl");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -162,6 +278,9 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(500)")
                         .HasColumnName("PasswordHash");
+
+                    b.Property<string>("PasswordResetKey")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
@@ -283,6 +402,39 @@ namespace Persistence.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Warehouse");
+                });
+
+            modelBuilder.Entity("Domain.Concrete.EmailAuthenticator", b =>
+                {
+                    b.HasOne("Domain.Concrete.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Concrete.OtpAuthenticator", b =>
+                {
+                    b.HasOne("Domain.Concrete.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Concrete.RefreshToken", b =>
+                {
+                    b.HasOne("Domain.Concrete.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Concrete.UserOperationClaim", b =>

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Persistence.Contexts;
 using Persistence.Concrete;
 using Application.Services.Repositories;
+using Persistence.Repositories;
 
 namespace Persistence
 {
@@ -23,6 +24,9 @@ namespace Persistence
             services.AddScoped<IWarehouseRepository, WarehouseRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<ICustomerWarehouseCostRepository, CustomerWarehouseCostRepository>();
+            services.AddScoped<IEmailAuthenticatorRepository, EmailAuthenticatorRepository>();
+            services.AddScoped<IOtpAuthenticatorRepository, OtpAuthenticatorRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             return services;
         }

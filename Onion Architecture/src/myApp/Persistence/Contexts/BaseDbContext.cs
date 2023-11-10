@@ -13,7 +13,9 @@ public class BaseDbContext : DbContext
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Warehouse> Warehouses { get; set; }
     public DbSet<CustomerWarehouseCost> CustomerWarehouseCosts { get; set; }
-
+    public DbSet<EmailAuthenticator> EmailAuthenticators { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<OtpAuthenticator> OtpAuthenticators { get; set; }
 
     public BaseDbContext(DbContextOptions dbContextOptions, IConfiguration configuration) : base(dbContextOptions)
     {
