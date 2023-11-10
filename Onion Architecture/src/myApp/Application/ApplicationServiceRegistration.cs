@@ -1,5 +1,6 @@
 ﻿using Application.Services.AuthService;
 using Application.Services.UserService;
+using Core.Application.Algorithms;
 using Core.Application.Pipelines.Logging;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Logging.Serilog;
@@ -31,6 +32,8 @@ public static class ApplicationServiceRegistration
 
         services.AddScoped<IAuthService, AuthManager>();
         services.AddScoped<IUserService, UserManager>();
+
+        services.AddScoped<IQuickSort, QuickSort>();
 
         services.AddSingleton<LoggerServiceBase, MsSqlLogger>();
         //services.AddSingleton<LoggerServiceBase, FileLogger>();
