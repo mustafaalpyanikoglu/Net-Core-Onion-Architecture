@@ -21,6 +21,8 @@ public partial class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.PasswordSalt).HasColumnName("PasswordSalt").HasColumnType("varbinary(500)").IsRequired();
         builder.Property(u => u.RegistrationDate).HasColumnName("RegistrationDate").IsRequired();
         builder.Property(u => u.UserStatus).HasColumnName("UserStatus").IsRequired();
+        builder.Property(u => u.ImageUrl).HasColumnName("ImageUrl").IsRequired(false);
+
 
         builder.HasMany(u => u.UserOperationClaims).WithOne(u => u.User);
 

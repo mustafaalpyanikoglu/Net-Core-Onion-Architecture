@@ -1,7 +1,11 @@
-﻿using Core.Application.Pipelines.Logging;
+﻿using Application.Services.AuthService;
+using Application.Services.UserService;
+using Core.Application.Pipelines.Logging;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Logging.Serilog;
 using Core.CrossCuttingConcerns.Logging.Serilog.Logger;
+using Core.Mailing;
+using Core.Mailing.MailKitImplementations;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -25,9 +29,13 @@ public static class ApplicationServiceRegistration
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
+        services.AddScoped<IAuthService, AuthManager>();
+        services.AddScoped<IUserService, UserManager>();
 
         services.AddSingleton<LoggerServiceBase, MsSqlLogger>();
         //services.AddSingleton<LoggerServiceBase, FileLogger>();
+
+        services.AddSingleton<IMailService, MailKitMailService>();
 
         return services;
     }
