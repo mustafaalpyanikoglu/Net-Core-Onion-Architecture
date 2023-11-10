@@ -6,6 +6,7 @@ using Application.Features.OperationClaims.Models;
 using AutoMapper;
 using Core.Persistence.Paging;
 using Domain.Concrete;
+using Application.Features.CustomerWarehouseCosts.Commands.DeleteCustomerWarehouseCosts;
 
 namespace Application.Features.Warehouses.Profiles;
 

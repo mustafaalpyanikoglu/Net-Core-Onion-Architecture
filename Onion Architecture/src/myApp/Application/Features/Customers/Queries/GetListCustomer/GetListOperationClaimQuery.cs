@@ -31,7 +31,7 @@ public class GetListCustomerQuery : IRequest<CustomerListModel>//, ISecuredReque
         {
             IPaginate<Customer> customers = await _customerRepository.GetListAsync(
                 index: request.PageRequest.Page,
-                request.PageRequest.PageSize);
+                size:request.PageRequest.PageSize);
 
             CustomerListModel mappedCustomerListModel = _mapper.Map<CustomerListModel>(customers);
             return mappedCustomerListModel;
