@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Warehouses.Constants;
 
-public static class WarehouseMessages
+public static class CustomerWarehouseCostMessages
 {
     public const string AddedWarehouse = "added Warehouse";
     public const string DeletedWarehouseClaim = "deleted Warehouse";

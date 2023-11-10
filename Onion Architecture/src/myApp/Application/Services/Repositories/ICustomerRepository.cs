@@ -6,5 +6,4 @@ namespace Application.Services.Repositories;
 
 public interface ICustomerRepository : IAsyncRepository<Customer>, IRepository<Customer>
 {
-    Task<IPaginate<Customer>> GetListAsync(object index, object pageSize);
 }
