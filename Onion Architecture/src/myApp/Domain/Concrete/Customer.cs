@@ -8,6 +8,7 @@ public class Customer:Entity
     public int Demand { get; set; }
 
     public virtual User User { get; set; }
+    public ICollection<CustomerWarehouseCost> CustomerWarehouseCosts { get; set; }
 
     public Customer()
     {
