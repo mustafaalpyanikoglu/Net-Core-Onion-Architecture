@@ -11,5 +11,5 @@ public static class UserOperationClaimMessages
     public const string UserOperationClaimDeleted = "deleted user operation claim";
     public const string UserOperationClaimUpdated = "updated user operation claim";
     public const string TheUserAlreadyHasSuchRole = "The user already has such a role";
-    public const string TheUserAlreadyHasRole = "\r\nthe user already has a role";
+    public const string TheUserAlreadyHasRole = "The user already has a role";
 }
