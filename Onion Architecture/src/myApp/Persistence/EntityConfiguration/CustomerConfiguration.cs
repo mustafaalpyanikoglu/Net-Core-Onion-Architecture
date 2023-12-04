@@ -15,6 +15,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(u => u.Demand).HasColumnName("Demand").IsRequired();
 
         builder.HasOne(u => u.User).WithOne(u => u.Customer).HasForeignKey<Customer>(u => u.UserID);
+
         #endregion
 
         //Customer[] customerSeeds =

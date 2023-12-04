@@ -1,9 +1,9 @@
 ﻿using Core.Utilities.Abstract;
-using Core.Utilities.Concrete;
+using Domain.Concrete;
 
 namespace Core.Application.Algorithms;
 
 public interface ISimulatedAnnealing
 {
-    IDataResult<BestResult> SolveWarehouseLocationProblem();
+    IDataResult<BestResult> SolveWarehouseLocationProblem(List<Customer> customers, List<Warehouse> warehouses);
 }

@@ -1,5 +1,8 @@
 ﻿using Application.Services.AuthService;
+using Application.Services.CustomerService;
+using Application.Services.LocationSolverService;
 using Application.Services.UserService;
+using Application.Services.WarehouseService;
 using Core.Application.Algorithms;
 using Core.Application.Pipelines.Logging;
 using Core.Application.Rules;
@@ -32,7 +35,12 @@ public static class ApplicationServiceRegistration
 
         services.AddScoped<IAuthService, AuthManager>();
         services.AddScoped<IUserService, UserManager>();
+        services.AddScoped<IWarehouseService, WarehouseManager>();
+        services.AddScoped<ICustomerService, CustomerManager>();
+        services.AddScoped<ICustomerWarehouseCostService, CustomerWarehouseCostManager>();
+        services.AddScoped<ILocationSolverService, LocationSolverManager>();
 
+        services.AddScoped<ISimulatedAnnealing, SimulatedAnnealing>();
         services.AddScoped<IQuickSort, QuickSort>();
 
         services.AddSingleton<LoggerServiceBase, MsSqlLogger>();

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Contexts;
 
@@ -11,9 +12,10 @@ using Persistence.Contexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BaseDbContext))]
-    partial class BaseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231203223244__Migration2")]
+    partial class _Migration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,6 +66,9 @@ namespace Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("CustomerId");
 
+                    b.Property<int?>("CustomerId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("WarehouseID")
                         .HasColumnType("int")
                         .HasColumnName("WarehouseID");
@@ -71,6 +76,8 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("CustomerId1");
 
                     b.HasIndex("WarehouseID");
 
@@ -386,10 +393,14 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Concrete.CustomerWarehouseCost", b =>
                 {
                     b.HasOne("Domain.Concrete.Customer", "Customer")
-                        .WithMany("CustomerWarehouseCosts")
+                        .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Domain.Concrete.Customer", null)
+                        .WithMany("CustomerWarehouseCosts")
+                        .HasForeignKey("CustomerId1");
 
                     b.HasOne("Domain.Concrete.Warehouse", "Warehouse")
                         .WithMany()

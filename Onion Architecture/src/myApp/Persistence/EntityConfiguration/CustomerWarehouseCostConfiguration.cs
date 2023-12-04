@@ -15,9 +15,9 @@ public class CustomerWarehouseCostConfiguration : IEntityTypeConfiguration<Custo
         builder.Property(u => u.CustomerId).HasColumnName("CustomerId").IsRequired();
         builder.Property(u => u.Cost).HasColumnName("Cost").IsRequired();
 
-
         builder.HasOne(u => u.Warehouse).WithMany().HasForeignKey(u => u.WarehouseID);
-        builder.HasOne(u => u.Customer).WithMany().HasForeignKey(u => u.CustomerId);
+        builder.HasOne(u => u.Customer).WithMany(c => c.CustomerWarehouseCosts).HasForeignKey(u => u.CustomerId);
+
 
         #endregion
 
