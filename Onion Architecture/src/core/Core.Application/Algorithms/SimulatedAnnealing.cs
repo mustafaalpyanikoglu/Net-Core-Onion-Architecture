@@ -9,34 +9,35 @@ public class SimulatedAnnealing: ISimulatedAnnealing
 {
     private Random _random = new Random(); // Random değer atamak için
     private int _numWarehouses { get; set; }
-    private int __numCustomers { get; set; }
+    private int _numCustomers { get; set; }
     private List<Customer> _customers;  // Müşteri listesi
     private List<Warehouse> _warehouses;  // Depo listesi
-    private List<CustomerWarehouseCost> _customerWarehouseCosts;
+    private Dictionary<int, int> _solution; // _solution veri tipi Dictionary<int, int> olarak değiştirildi
+
     private readonly IQuickSort _quickSort;
-    private List<int> _solution;
-    public List<int> Solution
+
+    public Dictionary<int, int> Solution // Solution property'sinin veri tipi değiştirildi
     {
         get { return _solution; }
         private set { _solution = value; }
     }
 
-    public SimulatedAnnealing(IQuickSort quickSort, List<Customer> customers, List<Warehouse> warehouses, List<CustomerWarehouseCost> customerWarehouseCosts)
+    public SimulatedAnnealing(IQuickSort quickSort)
     {
-        _customers = customers;
-        _warehouses = warehouses;
-        _customerWarehouseCosts = customerWarehouseCosts;
-        _numWarehouses = warehouses.Count;
-        __numCustomers = customers.Count;
         _quickSort = quickSort;
     }
 
-    public IDataResult<BestResult> SolveWarehouseLocationProblem()
+    public IDataResult<BestResult> SolveWarehouseLocationProblem(List<Customer> customers, List<Warehouse> warehouses)
     {
-        List<int> currentSolution = GenerateRandomSolution();
-        double currentCost = CalculateCost(currentSolution);
+        _customers = customers;
+        _warehouses = warehouses;
+        _numWarehouses = warehouses.Count;
+        _numCustomers = customers.Count;
 
-        List<int> bestSolution = new List<int>(currentSolution);
+        Dictionary<int, int> currentSolution = GenerateRandomSolution(); // currentSolution veri tipi değiştirildi
+        double currentCost = CalculateCost(currentSolution.Values.ToList());
+
+        Dictionary<int, int> bestSolution = new Dictionary<int, int>(currentSolution); // bestSolution veri tipi değiştirildi
         double bestCost = currentCost;
 
         double temperature = INITAL_TEMPERATURE;
@@ -44,53 +45,51 @@ public class SimulatedAnnealing: ISimulatedAnnealing
 
         while (temperature > 0 && iteration < MAX_ITERATIONS)
         {
-            List<int> newSolution = GenerateNeighborSolution(currentSolution);
-            double newCost = CalculateCost(newSolution);
+            Dictionary<int, int> newSolution = GenerateNeighborSolution(currentSolution); // newSolution veri tipi değiştirildi
+            double newCost = CalculateCost(newSolution.Values.ToList());
 
             if (shouldAcceptNewSolution(currentCost, newCost))
             {
-                currentSolution = new List<int>(newSolution);
+                currentSolution = new Dictionary<int, int>(newSolution);
                 currentCost = newCost;
             }
-            if (isNewCostBetter(newCost,bestCost))
+            if (isNewCostBetter(newCost, bestCost))
             {
-                bestSolution = new List<int>(newSolution);
+                bestSolution = new Dictionary<int, int>(newSolution);
                 bestCost = newCost;
             }
             temperature *= COOLINGRATE;
             iteration++;
         }
 
-        return new SuccessDataResult<BestResult>(new BestResult(bestCost,bestSolution));
+        return new SuccessDataResult<BestResult>(new BestResult(bestCost, bestSolution.Values.ToList()));
     }
     public double CalculateCost(List<int> solution)
     {
         double totalCost = 0;
-        for (int i = 0; i < __numCustomers; i++)
+        for (int i = 0; i < _numCustomers; i++)
         {
             totalCost += CalculateCostForSelectedWarehouse(solution[i], i);
         }
 
         return totalCost;
     }
-   
-    private List<int> GenerateRandomSolution()
+    private Dictionary<int, int> GenerateRandomSolution()
     {
         List<Customer> customers = new List<Customer>(_customers);
         List<Warehouse> warehouses = new List<Warehouse>(_warehouses);
-        int[] solution = new int[customers.Count];
+        Dictionary<int, int> solution = new Dictionary<int, int>();
 
         _quickSort.SortBy(customers, 0, customers.Count - 1, _quickSort.CompareCustomersByDemand);
         _quickSort.SortBy(warehouses, 0, warehouses.Count - 1, _quickSort.CompareWarehousesBySetupCost);
 
-
-        for (int i = 0; i < __numCustomers; i++)
+        foreach (var customer in customers)
         {
-            Warehouse selectedWarehouse = findSuitableWarehouse(customers[i], warehouses);
+            Warehouse selectedWarehouse = findSuitableWarehouse(customer, warehouses);
             if (selectedWarehouse is not null)
             {
-                selectedWarehouse.Capacity -= customers[i].Demand;
-                solution[customers[i].Id] = selectedWarehouse.Id;
+                selectedWarehouse.Capacity -= customer.Demand;
+                solution[customer.Id] = selectedWarehouse.Id;
             }
             else
             {
@@ -98,23 +97,33 @@ public class SimulatedAnnealing: ISimulatedAnnealing
             }
         }
 
-        return solution.ToList();
+        return solution;
     }
-    private List<int> GenerateNeighborSolution(List<int> currentSolution)
-    {
-        List<int> newSolution = new List<int>(currentSolution);
-        int customerIndex = _random.Next(__numCustomers);
-        int randomWarehouse = _random.Next(_numWarehouses);
 
-        newSolution[customerIndex] = randomWarehouse;
+    private Dictionary<int, int> GenerateNeighborSolution(Dictionary<int, int> currentSolution)
+    {
+        Dictionary<int, int> newSolution = new Dictionary<int, int>(currentSolution);
+        int randomCustomerId = _customers[_random.Next(_numCustomers)].Id;
+
+        // Rastgele bir depo ID'si seç
+        int randomWarehouseId = _warehouses[_random.Next(_numWarehouses)].Id;
+
+        newSolution[randomCustomerId] = randomWarehouseId;
 
         return newSolution;
     }
     private double CalculateCostForSelectedWarehouse(int warehouseId, int customerId)
     {
-        double travelCost = _customerWarehouseCosts.Where(p => p.WarehouseID == warehouseId && p.CustomerId == customerId).First().Cost;
-        double setupCost = _warehouses.Where(p => p.Id == warehouseId).First().SetupCost;
-        return travelCost + setupCost;
+        CustomerWarehouseCost? travel = _customers[customerId].CustomerWarehouseCosts.Where(p => p.WarehouseID == warehouseId).FirstOrDefault();
+        Warehouse? setup = _warehouses.Where(p => p.Id == warehouseId).FirstOrDefault();
+
+        if(travel is not null && setup is not null)
+        {
+            double travelCost = travel.Cost;
+            double setupCost = setup.SetupCost;
+            return travelCost + setupCost;
+        }
+        else return 0;
     }
     private bool shouldAcceptNewSolution(double currentCost, double newCost)
     {
