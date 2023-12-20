@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(typeof(DeletedWarehouseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
         [SwaggerOperation(description: ResponseDescriptions.EXCEPTION_DETAIL)]
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public async Task<IActionResult> Delete([FromBody] DeleteWarehouseCommand deleteWarehouseCommand)
         {
             DeletedWarehouseDto result = await Mediator.Send(deleteWarehouseCommand);
@@ -42,8 +42,8 @@ namespace WebAPI.Controllers
         [ProducesResponseType(typeof(UpdatedWarehouseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
         [SwaggerOperation(description: ResponseDescriptions.EXCEPTION_DETAIL)]
-        [HttpPost("update")]
-        public async Task<IActionResult> Update([FromForm] UpdateWarehouseCommand updateWarehouseCommand)
+        [HttpPut("update")]
+        public async Task<IActionResult> Update([FromBody] UpdateWarehouseCommand updateWarehouseCommand)
         {
             UpdatedWarehouseDto result = await Mediator.Send(updateWarehouseCommand);
             return Ok(result);
