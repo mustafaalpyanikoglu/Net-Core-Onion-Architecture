@@ -3,7 +3,6 @@ using Application.Services.CustomerService;
 using Application.Services.LocationSolverService;
 using Application.Services.UserService;
 using Application.Services.WarehouseService;
-using Core.Application.Algorithms;
 using Core.Application.Pipelines.Logging;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Logging.Serilog;
@@ -39,9 +38,6 @@ public static class ApplicationServiceRegistration
         services.AddScoped<ICustomerService, CustomerManager>();
         services.AddScoped<ICustomerWarehouseCostService, CustomerWarehouseCostManager>();
         services.AddScoped<ILocationSolverService, LocationSolverManager>();
-
-        services.AddScoped<ISimulatedAnnealing, SimulatedAnnealing>();
-        services.AddScoped<IQuickSort, QuickSort>();
 
         services.AddSingleton<LoggerServiceBase, MsSqlLogger>();
         //services.AddSingleton<LoggerServiceBase, FileLogger>();

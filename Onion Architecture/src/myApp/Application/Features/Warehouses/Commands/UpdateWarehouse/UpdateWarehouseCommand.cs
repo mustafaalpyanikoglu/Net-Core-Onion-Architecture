@@ -10,13 +10,13 @@ using static Domain.Constants.OperationClaims;
 
 namespace Application.Features.Warehouses.Commands.UpdateWarehouse;
 
-public class UpdateWarehouseCommand : IRequest<UpdatedWarehouseDto>/*, ISecuredRequest*/
+public class UpdateWarehouseCommand : IRequest<UpdatedWarehouseDto>, ISecuredRequest
 {
     public int Id { get; set; }
     public int Capacity { get; set; }
     public double SetupCost { get; set; }
 
-    public string[] Roles => new[] { ADMIN, WarehouseUpdate };
+    public string[] Roles => new[] { ADMIN, USER };
 
     public class UpdateWarehouseCommandHandler : IRequestHandler<UpdateWarehouseCommand, UpdatedWarehouseDto>
     {

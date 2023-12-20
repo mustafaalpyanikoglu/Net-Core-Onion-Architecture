@@ -1,5 +1,5 @@
-﻿using Application.Services.LocationSolverService;
-using Core.Application.Algorithms;
+﻿using Application.Features.LocationSolvers.Dtos;
+using Infrastructure.LocationOptimizationService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -8,19 +8,19 @@ namespace WebAPI.Controllers;
 [ApiController]
 public class LocationSolverController : BaseController
 {
-    private readonly ILocationSolverService _locationSolverService;
+    private readonly ILocationOptimizationService _locationOptimizationService;
 
-    public LocationSolverController(ILocationSolverService locationSolverService)
+    public LocationSolverController(ILocationOptimizationService locationOptimizationService)
     {
-        _locationSolverService = locationSolverService;
+        _locationOptimizationService = locationOptimizationService;
     }
 
-    [ProducesResponseType(typeof(BestResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(LocationSolverResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(LocationSolverResult), StatusCodes.Status400BadRequest)]
     [HttpPost("locationsolver")]
     public async Task<IActionResult> LocationSolver()
     {
-        BestResult result = await _locationSolverService.SimaulatedAnnealingQuickSortSolver();
+        LocationSolverResult result = await _locationOptimizationService.LocationSolver();
         return Ok(result);
     }
 }

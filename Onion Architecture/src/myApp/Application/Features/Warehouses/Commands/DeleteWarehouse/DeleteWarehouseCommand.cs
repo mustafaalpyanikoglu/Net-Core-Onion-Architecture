@@ -11,7 +11,7 @@ using static Domain.Constants.OperationClaims;
 
 namespace Application.Features.Warehouses.Commands.DeleteWarehouse;
 
-public class DeleteWarehouseCommand : IRequest<DeletedWarehouseDto>/*, ISecuredRequest*/
+public class DeleteWarehouseCommand : IRequest<DeletedWarehouseDto>, ISecuredRequest
 {
     public int Id { get; set; }
 

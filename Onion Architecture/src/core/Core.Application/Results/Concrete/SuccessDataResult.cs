@@ -11,11 +11,11 @@
         {
 
         }
-        public SuccessDataResult(string message):base(default,true,message)
+        public SuccessDataResult(string message):base(default!,true,message)
         {
 
         }
-        public SuccessDataResult():base(default,true)
+        public SuccessDataResult():base(default!,true)
         {
 
         }

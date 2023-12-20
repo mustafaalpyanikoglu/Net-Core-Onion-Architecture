@@ -1,8 +1,8 @@
-﻿using Core.Application.Algorithms;
+﻿using Application.Features.LocationSolvers.Dtos;
 
 namespace Application.Services.LocationSolverService;
 
 public interface ILocationSolverService
 {
-    Task<BestResult> SimaulatedAnnealingQuickSortSolver();
+    public Task<LocationOptimizationRequestDto> SimaulatedAnnealingQuickSortSolver();
 }
